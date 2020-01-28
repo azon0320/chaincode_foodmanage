@@ -1,6 +1,9 @@
 package models
 
-import "time"
+import (
+	"strconv"
+	"time"
+)
 
 /*
  * 非常基本的 数据模型，包括一个 ID 作为键
@@ -22,7 +25,7 @@ type Credentials struct {
 func allocateId() int64 {
 	return time.Now().UnixNano() / 1e6
 }
-func allocateIdS() string { return string(allocateId()) }
+func allocateIdS() string { return strconv.Itoa(int(allocateId())) }
 
 func CurrentTimeMillis() int64 {
 	return allocateId()

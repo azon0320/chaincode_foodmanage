@@ -67,21 +67,31 @@ type FoodManageChaincodeV1 struct{}
 
 func (ctx *FoodManageChaincodeV1) Init(stub shim.ChaincodeStubInterface) peer.Response {
 	var log string = ""
-	log += "got init func, "
+	log += "got init func,"
 	initBalance, err := store.GetStateInt(store.GlobalsInitialBalanceIndex, DefaultInitialBalance, stub)
 	if err != nil {
-		log += fmt.Sprintf("global initial balance not found, creating as %d, ", DefaultInitialBalance)
+		log += fmt.Sprintf("global initial balance not found,creating as %d,", DefaultInitialBalance)
 		err = store.SetStateInt(store.GlobalsInitialBalanceIndex, DefaultInitialBalance, stub)
 		if err != nil {
-			log += "create balance state failed, "
+			log += "create balance state failed,"
+		}else {
+			log += fmt.Sprintf("created balance state : %d,", DefaultInitialBalance)
 		}
 	}
 	log += fmt.Sprintf("default initial balance is %d", initBalance)
+	fmt.Println(strings.Replace(log, ",", "\n", strings.IndexAny(log, ",")))
 	return shim.Success([]byte(log))
 }
 
 func (ctx *FoodManageChaincodeV1) Invoke(stub shim.ChaincodeStubInterface) peer.Response {
 	fcn, args := stub.GetFunctionAndParameters()
+
+	//DEBUGGER
+	for k, v := range args{
+		fmt.Println(fmt.Sprintf("Arg[%d] = %s", k, v))
+	}
+	fmt.Println()
+
 	response, ok := ctx.processUnAuthenticatedInvoke(fcn, args, stub)
 	if ok {
 		 return response

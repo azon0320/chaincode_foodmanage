@@ -8,7 +8,7 @@ import (
 
 func main() {
 	//TODO Setup Code
-	//shim.SetLoggingLevel(shim.LogDebug)
+	fmt.Println("Start the FoodManage Chaincode")
 	err := shim.Start(new(chaincode.FoodManageChaincodeV1))
 	if err != nil {
 		fmt.Printf("Error Starting FoodManageChaincode v1 %s", err)

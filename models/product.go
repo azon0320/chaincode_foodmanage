@@ -46,7 +46,7 @@ func NewProduct(sellerId string,
 	return &Product{
 		ProductSnapshot: &ProductSnapshot{
 			ProductUpdateRequest: &ProductUpdateRequest{
-				DataModel:            &DataModel{Id: PrefixProduct + string(allocateId())},
+				DataModel:            &DataModel{Id: PrefixProduct + allocateIdS()},
 				EachPrice:            eachPrice,
 				Inventory:            initialInventory,
 				Description:          description,

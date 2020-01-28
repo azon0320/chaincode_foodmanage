@@ -13,8 +13,6 @@ const AttemptCooldown = .5 * 60 * 1000
 
 func AttemptWithPassword(credentials *models.Credentials, stub shim.ChaincodeStubInterface) (*models.Operator, error) {
 	operator := store.GetOperator(credentials.AccountId, stub)
-	var err error = nil
-	var success bool = false
 	if operator == nil {
 		return nil, errors.New("account not found")
 	}
@@ -26,6 +24,7 @@ func AttemptWithPassword(credentials *models.Credentials, stub shim.ChaincodeStu
 			operator.LastAttempts = 0
 		}
 	}
+	var err error = nil
 	if operator.Password != credentials.Password {
 		err = errors.New("attempt failed")
 		operator.AttemptFails++
@@ -36,11 +35,10 @@ func AttemptWithPassword(credentials *models.Credentials, stub shim.ChaincodeStu
 		}
 		operator.AttemptFails = 0
 		operator.LastLog = models.CurrentTimeMillis()
-		success = true
 	}
 	operator.LastAttempts = models.CurrentTimeMillis()
 	err = store.SaveOperator(operator, stub)
-	if err == nil && success {
+	if err == nil {
 		return operator, nil
 	} else {
 		return nil, err

@@ -31,7 +31,7 @@ func GetStateInt(key string, defaultVal int, stub shim.ChaincodeStubInterface) (
 	}
 	intValue, err2 := strconv.Atoi(string(value))
 	if err2 != nil {
-		return defaultVal, err
+		return defaultVal, err2
 	}
 	return intValue, nil
 }

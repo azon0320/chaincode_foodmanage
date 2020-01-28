@@ -101,7 +101,7 @@ func CancelSellTransaction(seller *models.Seller, order *models.TransactionOrder
 }
 
 func RegisterSeller(password string, initialBalance uint64, stub shim.ChaincodeStubInterface) (string, error){
-	seller := &models.Seller{Operator: models.NewOperator(models.OperatorBuyer,password, initialBalance)}
+	seller := &models.Seller{Operator: models.NewOperator(models.OperatorSeller,password, initialBalance)}
 	err := store.SaveSeller(seller, stub)
 	return seller.Id, err
 }

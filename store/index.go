@@ -2,7 +2,7 @@ package store
 
 import (
 	"encoding/json"
-	"github.com/dmao/gome/chaincode/chaincode_foodmanage/models"
+	"github.com/dormao/chaincode_foodmanage/models"
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 	"strconv"
 )

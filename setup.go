@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/dmao/gome/chaincode/chaincode_foodmanage/chaincode"
+	"github.com/dormao/chaincode_foodmanage/chaincode"
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 )
 

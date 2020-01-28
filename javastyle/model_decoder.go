@@ -2,7 +2,7 @@ package javastyle
 
 import (
 	"encoding/json"
-	"github.com/dmao/gome/chaincode/chaincode_foodmanage/models"
+	"github.com/dormao/chaincode_foodmanage/models"
 )
 
 /*

@@ -3,9 +3,9 @@ package chaincode
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/dmao/gome/chaincode/chaincode_foodmanage/actions"
-	"github.com/dmao/gome/chaincode/chaincode_foodmanage/models"
-	"github.com/dmao/gome/chaincode/chaincode_foodmanage/store"
+	"github.com/dormao/chaincode_foodmanage/actions"
+	"github.com/dormao/chaincode_foodmanage/models"
+	"github.com/dormao/chaincode_foodmanage/store"
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 	"github.com/hyperledger/fabric/protos/peer"
 )

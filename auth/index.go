@@ -2,8 +2,8 @@ package auth
 
 import (
 	"errors"
-	"github.com/dmao/gome/chaincode/chaincode_foodmanage/models"
-	"github.com/dmao/gome/chaincode/chaincode_foodmanage/store"
+	"github.com/dormao/chaincode_foodmanage/models"
+	"github.com/dormao/chaincode_foodmanage/store"
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 	"math"
 )

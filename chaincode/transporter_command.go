@@ -12,7 +12,7 @@ import (
 
 func (ctx *FoodManageChaincode) processTransporterInvoke(tspr *models.Transporter, fcn string, args []string, stub shim.ChaincodeStubInterface) peer.Response {
 	switch fcn {
-	case OPERATE_COMPLETE_TRANSPORT:
+	case models.OPERATE_COMPLETE_TRANSPORT:
 		Usage := fmt.Sprintf("Usage : %s <Credentials> <TransportId>", fcn)
 		if len(args) < 2 {
 			return shim.Error(Usage)
@@ -26,7 +26,7 @@ func (ctx *FoodManageChaincode) processTransporterInvoke(tspr *models.Transporte
 			return shim.Error(err.Error())
 		}
 		return shim.Success([]byte{})
-	case OPERATE_CANCELTRANSPORT:
+	case models.OPERATE_CANCELTRANSPORT:
 		Usage := fmt.Sprintf("Usage : %s <Credentials> <TransportId>", fcn)
 		if len(args) < 2 {
 			return shim.Error(Usage)
@@ -40,7 +40,7 @@ func (ctx *FoodManageChaincode) processTransporterInvoke(tspr *models.Transporte
 			return shim.Error(err.Error())
 		}
 		return shim.Success([]byte{})
-	case OPERATE_UPDATE_TRANSPORT:
+	case models.OPERATE_UPDATE_TRANSPORT:
 		Usage := fmt.Sprintf("Usage : %s <Credentials> <TransportId> <Json{temperature}>", fcn)
 		if len(args) < 2 {
 			return shim.Error(Usage)

@@ -14,32 +14,6 @@ import (
 	"strings"
 )
 
-// -----  BEFORE AUTHENTICATE  -----
-const UnAuthRegisterSeller = "reg_seller"
-const UnAuthRegisterBuyer = "reg_buyer"
-const UnAuthRegisterTransporter = "reg_transporter"
-
-// -----  BEGIN SELLER  -----
-const OPERATE_ADDPRODUCT = "add_prod"
-const OPERATE_UPDATE_PRODUCT = "update_prod"
-const OPERATE_TAKEONSELL = "sell_on"
-const OPERATE_TAKEOFFSELL = "sell_off"
-const OPERATE_TRANSMIT = "transmit"
-const OPERATE_CANCELORDER = "cancel_order"
-
-// -----  BEGIN BUYER  -----
-const OPERATE_PURCHASE = "buy_prod"
-const OPERATE_CONFIRM = "confirm"
-
-//const OPERATE_CANCELORDER = "cancel_order"
-
-// -----  BEGIN TRANSPORTER  -----
-const OPERATE_CANCELTRANSPORT = "cancel_transport"
-const OPERATE_UPDATE_TRANSPORT = "update_transport"
-const OPERATE_COMPLETE_TRANSPORT = "complete_transport"
-
-const DefaultInitialBalance = 1000
-
 /*
 var (
 	OperationMap = map[byte][]string{
@@ -70,7 +44,7 @@ func (ctx *FoodManageChaincode) Init(stub shim.ChaincodeStubInterface) peer.Resp
 	var log string = ""
 	log += "got init func,"
 	_, args := stub.GetFunctionAndParameters()
-	initBalance, err := store.GetStateInt(store.GlobalsInitialBalanceIndex, DefaultInitialBalance, stub)
+	initBalance, err := store.GetStateInt(store.GlobalsInitialBalanceIndex, models.DefaultInitialBalance, stub)
 	if err != nil {
 		if len(args) > 0 {
 			val, err := strconv.Atoi(args[0])
@@ -79,12 +53,12 @@ func (ctx *FoodManageChaincode) Init(stub shim.ChaincodeStubInterface) peer.Resp
 				log += fmt.Sprintf("argument balance found : %d,", initBalance)
 			}
 		}
-		log += fmt.Sprintf("global initial balance not found,creating as %d,", DefaultInitialBalance)
+		log += fmt.Sprintf("global initial balance not found,creating as %d,", models.DefaultInitialBalance)
 		err = store.SetStateInt(store.GlobalsInitialBalanceIndex, initBalance, stub)
 		if err != nil {
 			log += "create balance state failed,"
 		}else {
-			log += fmt.Sprintf("created balance state : %d,", DefaultInitialBalance)
+			log += fmt.Sprintf("created balance state : %d,", models.DefaultInitialBalance)
 		}
 	}
 	log += fmt.Sprintf("default initial balance is %d", initBalance)
@@ -122,7 +96,7 @@ func (ctx *FoodManageChaincode) Invoke(stub shim.ChaincodeStubInterface) peer.Re
 
 func (ctx *FoodManageChaincode) processUnAuthenticatedInvoke(fcn string, args []string, stub shim.ChaincodeStubInterface) (peer.Response, bool) {
 	switch fcn {
-	case UnAuthRegisterSeller, UnAuthRegisterBuyer, UnAuthRegisterTransporter:
+	case models.UnAuthRegisterSeller, models.UnAuthRegisterBuyer, models.UnAuthRegisterTransporter:
 		Usage := fmt.Sprintf("Usage : %s <Password>", fcn)
 		if len(args) < 1 {
 			return shim.Error(Usage), true
@@ -131,14 +105,14 @@ func (ctx *FoodManageChaincode) processUnAuthenticatedInvoke(fcn string, args []
 		if strings.TrimSpace(password) == "" {
 			return shim.Error(Usage), true
 		}
-		initBal,_ := store.GetStateInt(store.GlobalsInitialBalanceIndex, DefaultInitialBalance, stub)
+		initBal,_ := store.GetStateInt(store.GlobalsInitialBalanceIndex, models.DefaultInitialBalance, stub)
 		id, err := "", errors.New("unexpected register function")
 		switch fcn {
-		case UnAuthRegisterSeller:
+		case models.UnAuthRegisterSeller:
 			id, err = actions.RegisterSeller(password, uint64(initBal), stub)
-		case UnAuthRegisterBuyer:
+		case models.UnAuthRegisterBuyer:
 			id, err = actions.RegisterBuyer(password, uint64(initBal), stub)
-		case UnAuthRegisterTransporter:
+		case models.UnAuthRegisterTransporter:
 			id, err = actions.RegisterTransporter(password, uint64(initBal), stub)
 		}
 		if err != nil {

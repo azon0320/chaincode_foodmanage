@@ -12,7 +12,7 @@ import (
 
 func (ctx *FoodManageChaincode) processBuyerInvoke(buyer *models.Buyer, fcn string, args []string, stub shim.ChaincodeStubInterface) peer.Response {
 	switch fcn {
-	case OPERATE_PURCHASE:
+	case models.OPERATE_PURCHASE:
 		Usage := fmt.Sprintf("Usage : %s <Credentials> <ProductId> <PurchaseCount>", fcn)
 		if len(args) < 3 {
 			return shim.Error(Usage)
@@ -30,7 +30,7 @@ func (ctx *FoodManageChaincode) processBuyerInvoke(buyer *models.Buyer, fcn stri
 			return shim.Error(err.Error())
 		}
 		return shim.Success([]byte(tsacId))
-	case OPERATE_CONFIRM:
+	case models.OPERATE_CONFIRM:
 		Usage := fmt.Sprintf("Usage : %s <Credentials> <TransactionId>", fcn)
 		if len(args) < 2 {
 			return shim.Error(Usage)
@@ -44,7 +44,7 @@ func (ctx *FoodManageChaincode) processBuyerInvoke(buyer *models.Buyer, fcn stri
 			return shim.Error(err.Error())
 		}
 		return shim.Success([]byte{})
-	case OPERATE_CANCELORDER:
+	case models.OPERATE_CANCELORDER:
 		Usage := fmt.Sprintf("Usage : %s <Credentials> <TransactionId>", fcn)
 		if len(args) < 2 {
 			return shim.Error(Usage)

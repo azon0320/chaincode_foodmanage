@@ -12,13 +12,13 @@ import (
 
 func (ctx *FoodManageChaincode) processSellerInvoke(seller *models.Seller, fcn string, args []string, stub shim.ChaincodeStubInterface) peer.Response {
 	switch fcn {
-	case OPERATE_ADDPRODUCT: // add_prod
+	case models.OPERATE_ADDPRODUCT: // add_prod
 		prodId, err := actions.AddProduct(seller, stub)
 		if err != nil {
 			return shim.Error(err.Error())
 		}
 		return shim.Success([]byte(prodId))
-	case OPERATE_UPDATE_PRODUCT: // add_prod <jsonTypeMap>
+	case models.OPERATE_UPDATE_PRODUCT: // add_prod <jsonTypeMap>
 		Usage := fmt.Sprintf("Usage: %s <Credentials> <ProductId> <Json{each_price,inventory,temperature,description,transport_amount}>", fcn)
 		if len(args) != 3 {
 			return shim.Error(Usage)
@@ -37,7 +37,7 @@ func (ctx *FoodManageChaincode) processSellerInvoke(seller *models.Seller, fcn s
 			return shim.Error(err.Error())
 		}
 		return shim.Success([]byte{})
-	case OPERATE_TAKEONSELL:
+	case models.OPERATE_TAKEONSELL:
 		Usage := fmt.Sprintf("Usage: %s <Credentials> <ProductId>", fcn)
 		if len(args) != 2 {
 			return shim.Error(Usage)
@@ -51,7 +51,7 @@ func (ctx *FoodManageChaincode) processSellerInvoke(seller *models.Seller, fcn s
 			return shim.Error(err.Error())
 		}
 		return shim.Success([]byte{})
-	case OPERATE_TAKEOFFSELL:
+	case models.OPERATE_TAKEOFFSELL:
 		Usage := fmt.Sprintf("Usage: %s <Credentials> <ProductId>", fcn)
 		if len(args) != 2 {
 			return shim.Error(Usage)
@@ -65,7 +65,7 @@ func (ctx *FoodManageChaincode) processSellerInvoke(seller *models.Seller, fcn s
 			return shim.Error(err.Error())
 		}
 		return shim.Success([]byte{})
-	case OPERATE_TRANSMIT:
+	case models.OPERATE_TRANSMIT:
 		Usage := fmt.Sprintf("Usage: %s <Credentials> <TransactionId> <TransporterId>", fcn)
 		if len(args) != 3 {
 			return shim.Error(Usage)
@@ -83,7 +83,7 @@ func (ctx *FoodManageChaincode) processSellerInvoke(seller *models.Seller, fcn s
 			return shim.Error(err.Error())
 		}
 		return shim.Success([]byte(torderId))
-	case OPERATE_CANCELORDER:
+	case models.OPERATE_CANCELORDER:
 		Usage := fmt.Sprintf("Usage: %s <Credentials> <TransactionId>", fcn)
 		if len(args) != 2 {
 			return shim.Error(Usage)

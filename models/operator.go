@@ -48,7 +48,7 @@ type Transporter struct {
 }
 
 func NewOperator(accountType byte, password string, initialBalance uint64) *Operator {
-	id := allocateIdS()
+	id := AllocateIdS()
 	var prefixId string = ""
 	switch accountType {
 	case OperatorSeller:

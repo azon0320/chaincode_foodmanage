@@ -10,7 +10,7 @@ import (
 	"github.com/hyperledger/fabric/protos/peer"
 )
 
-func (ctx *FoodManageChaincodeV1) processSellerInvoke(seller *models.Seller, fcn string, args []string, stub shim.ChaincodeStubInterface) peer.Response {
+func (ctx *FoodManageChaincode) processSellerInvoke(seller *models.Seller, fcn string, args []string, stub shim.ChaincodeStubInterface) peer.Response {
 	switch fcn {
 	case OPERATE_ADDPRODUCT: // add_prod
 		prodId, err := actions.AddProduct(seller, stub)
@@ -72,11 +72,11 @@ func (ctx *FoodManageChaincodeV1) processSellerInvoke(seller *models.Seller, fcn
 		}
 		tsac, err := store.GetTransactionOrderById(args[1], stub)
 		if err != nil {
-			return shim.Error(err.Error())
+			return shim.Error("transaction not found")
 		}
 		tspr, err := store.GetTransporterById(args[2], stub)
 		if err != nil {
-			return shim.Error(err.Error())
+			return shim.Error("transporter not found")
 		}
 		torderId, err := actions.TransmitOrder(seller, tsac, tspr, stub)
 		if err != nil {

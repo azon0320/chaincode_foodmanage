@@ -10,7 +10,7 @@ import (
 	"strconv"
 )
 
-func (ctx *FoodManageChaincodeV1) processBuyerInvoke(buyer *models.Buyer, fcn string, args []string, stub shim.ChaincodeStubInterface) peer.Response {
+func (ctx *FoodManageChaincode) processBuyerInvoke(buyer *models.Buyer, fcn string, args []string, stub shim.ChaincodeStubInterface) peer.Response {
 	switch fcn {
 	case OPERATE_PURCHASE:
 		Usage := fmt.Sprintf("Usage : %s <Credentials> <ProductId> <PurchaseCount>", fcn)

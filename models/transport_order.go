@@ -23,7 +23,7 @@ func NewTransportOrder(
 ) *TransportOrder {
 	return &TransportOrder{
 		OrderWasted:   false,
-		DataModel:     &DataModel{Id: PREFIX_TRANSPORT_ORDER + allocateIdS()},
+		DataModel:     &DataModel{Id: PREFIX_TRANSPORT_ORDER + AllocateIdS()},
 		Snapshot:      snapshot,
 		TransporterId: transporterId,
 		TransactionId: transactionId,

@@ -22,11 +22,11 @@ type Credentials struct {
 }
 
 // 毫秒级对象ID
-func allocateId() int64 {
+func AllocateId() int64 {
 	return time.Now().UnixNano() / 1e6
 }
-func allocateIdS() string { return strconv.Itoa(int(allocateId())) }
+func AllocateIdS() string { return strconv.Itoa(int(AllocateId())) }
 
 func CurrentTimeMillis() int64 {
-	return allocateId()
+	return AllocateId()
 }

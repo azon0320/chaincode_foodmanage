@@ -21,7 +21,7 @@ func NewTransactionOrder(
 	snapshot *ProductSnapshot, buyerId string, productCount uint32,
 ) *TransactionOrder {
 	order := &TransactionOrder{
-		DataModel: &DataModel{Id: PREFIX_TRANSACTION_ORDER + allocateIdS()},
+		DataModel: &DataModel{Id: PREFIX_TRANSACTION_ORDER + AllocateIdS()},
 		Snapshot:  snapshot, TransportOrderId: "",
 		BuyerId:      buyerId,
 		ProductCount: productCount,

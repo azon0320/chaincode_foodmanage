@@ -64,7 +64,7 @@ func TransmitOrder(
 		return "", errors.New("not the product owner")
 	}
 	if tsac.OrderStatus != models.TRANSACTION_ORDER_STATUS_UNTRANSMIT {
-		return "", errors.New("target is transmitted")
+		return "", errors.New("order has been transmitted or closed")
 	}
 	if tsac.TransportOrderId != "" {
 		// 未发往运输却出现了运输订单
@@ -92,6 +92,15 @@ func CancelSellTransaction(seller *models.Seller, order *models.TransactionOrder
 		transportOrder, _ := store.GetTransportOrderById(order.TransportOrderId, stub)
 		if transportOrder != nil && !transportOrder.OrderWasted {
 			return errors.New("order has been transmitted")
+		}
+	}else{
+		switch order.OrderStatus {
+		case models.TRANSACTION_ORDER_STATUS_UNCONFIRM, models.TRANSACTION_ORDER_STATUS_TRANSPORTING:
+			return errors.New("order has been transmitted")
+		case models.TRANSACTION_ORDER_STATUS_COMPLETED:
+			return errors.New("order has been completed")
+		case models.TRANSACTION_ORDER_STATUS_FAILED:
+			return errors.New("order has been closed")
 		}
 	}
 	// TODO pay back to the buyer

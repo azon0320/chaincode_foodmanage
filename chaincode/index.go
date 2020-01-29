@@ -10,6 +10,7 @@ import (
 	"github.com/dormao/chaincode_foodmanage/util"
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 	"github.com/hyperledger/fabric/protos/peer"
+	"strconv"
 	"strings"
 )
 
@@ -63,15 +64,23 @@ var (
 )
 */
 
-type FoodManageChaincodeV1 struct{}
+type FoodManageChaincode struct{}
 
-func (ctx *FoodManageChaincodeV1) Init(stub shim.ChaincodeStubInterface) peer.Response {
+func (ctx *FoodManageChaincode) Init(stub shim.ChaincodeStubInterface) peer.Response {
 	var log string = ""
 	log += "got init func,"
+	_, args := stub.GetFunctionAndParameters()
 	initBalance, err := store.GetStateInt(store.GlobalsInitialBalanceIndex, DefaultInitialBalance, stub)
 	if err != nil {
+		if len(args) > 0 {
+			val, err := strconv.Atoi(args[0])
+			if err == nil {
+				initBalance = val
+				log += fmt.Sprintf("argument balance found : %d,", initBalance)
+			}
+		}
 		log += fmt.Sprintf("global initial balance not found,creating as %d,", DefaultInitialBalance)
-		err = store.SetStateInt(store.GlobalsInitialBalanceIndex, DefaultInitialBalance, stub)
+		err = store.SetStateInt(store.GlobalsInitialBalanceIndex, initBalance, stub)
 		if err != nil {
 			log += "create balance state failed,"
 		}else {
@@ -83,10 +92,11 @@ func (ctx *FoodManageChaincodeV1) Init(stub shim.ChaincodeStubInterface) peer.Re
 	return shim.Success([]byte(log))
 }
 
-func (ctx *FoodManageChaincodeV1) Invoke(stub shim.ChaincodeStubInterface) peer.Response {
+func (ctx *FoodManageChaincode) Invoke(stub shim.ChaincodeStubInterface) peer.Response {
 	fcn, args := stub.GetFunctionAndParameters()
 
-	//DEBUGGER
+	// TODO DEBUGGER DELETE
+	fmt.Println(fmt.Sprintf("Fcn = %s", fcn))
 	for k, v := range args{
 		fmt.Println(fmt.Sprintf("Arg[%d] = %s", k, v))
 	}
@@ -110,7 +120,7 @@ func (ctx *FoodManageChaincodeV1) Invoke(stub shim.ChaincodeStubInterface) peer.
 	return ctx.processAuthenticatedInvoke(operator, fcn, args, stub)
 }
 
-func (ctx *FoodManageChaincodeV1) processUnAuthenticatedInvoke(fcn string, args []string, stub shim.ChaincodeStubInterface) (peer.Response, bool) {
+func (ctx *FoodManageChaincode) processUnAuthenticatedInvoke(fcn string, args []string, stub shim.ChaincodeStubInterface) (peer.Response, bool) {
 	switch fcn {
 	case UnAuthRegisterSeller, UnAuthRegisterBuyer, UnAuthRegisterTransporter:
 		Usage := fmt.Sprintf("Usage : %s <Password>", fcn)
@@ -139,7 +149,7 @@ func (ctx *FoodManageChaincodeV1) processUnAuthenticatedInvoke(fcn string, args 
 	return shim.Error("unauth function invalid"), false
 }
 
-func (ctx *FoodManageChaincodeV1) processAuthenticatedInvoke(operator *models.Operator, fcn string, args []string, stub shim.ChaincodeStubInterface) peer.Response {
+func (ctx *FoodManageChaincode) processAuthenticatedInvoke(operator *models.Operator, fcn string, args []string, stub shim.ChaincodeStubInterface) peer.Response {
 	switch operator.OperatorType {
 	case models.OperatorSeller:
 		return ctx.processSellerInvoke(&models.Seller{Operator: operator}, fcn, args, stub)

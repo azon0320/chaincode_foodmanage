@@ -10,7 +10,7 @@ import (
 	"github.com/hyperledger/fabric/protos/peer"
 )
 
-func (ctx *FoodManageChaincodeV1) processTransporterInvoke(tspr *models.Transporter, fcn string, args []string, stub shim.ChaincodeStubInterface) peer.Response {
+func (ctx *FoodManageChaincode) processTransporterInvoke(tspr *models.Transporter, fcn string, args []string, stub shim.ChaincodeStubInterface) peer.Response {
 	switch fcn {
 	case OPERATE_COMPLETE_TRANSPORT:
 		Usage := fmt.Sprintf("Usage : %s <Credentials> <TransportId>", fcn)

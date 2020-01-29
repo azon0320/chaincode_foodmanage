@@ -15,14 +15,14 @@ import (
 func PurchaseProduct(byer *models.Buyer, prod *models.Product, count uint32, stub shim.ChaincodeStubInterface) (string, error) {
 	if byer.Frozen {
 		return "", errors.New("account has been frozen")
-	} else if prod.ShelvesStatus != models.ShelvesstatusOffsell {
+	} else if prod.ShelvesStatus == models.ShelvesstatusOffsell {
 		return "", errors.New("product is now discontinued")
 	} else if prod.Inventory < count {
 		return "", errors.New("no enough inventory")
 	} else if count < 1 {
 		return "", errors.New("count must be greater than 0")
 	}
-	productSum := uint64(count) * prod.EachPrice
+	productSum := uint64(count) * prod.EachPrice + prod.TransportAmount
 	if productSum > byer.Balance {
 		return "", errors.New("no enough balance")
 	}
@@ -66,9 +66,22 @@ func ConfirmTransaction(byer *models.Buyer, transactionOrder *models.Transaction
 	if err2 != nil {
 		return err2
 	}
+	torder, err2 := store.GetTransportOrderById(transactionOrder.TransportOrderId, stub)
+	if err2 != nil {
+		return err2
+	}
+	tspr, err2 := store.GetTransporterById(torder.TransporterId, stub)
+	if err2 != nil {
+		return err2
+	}
 	prodSum := transactionOrder.Snapshot.EachPrice * uint64(transactionOrder.ProductCount)
 	seller.Balance += prodSum
+	tspr.Balance += transactionOrder.Snapshot.TransportAmount
 	err := store.SaveTransactionOrder(transactionOrder, stub)
+	if err != nil {
+		return err
+	}
+	err = store.SaveTransporter(tspr, stub)
 	if err != nil {
 		return err
 	}
@@ -88,6 +101,8 @@ func CancelBuyTransaction(byer *models.Buyer, transactionOrder *models.Transacti
 			return errors.New("cancel is prohibited after transmitted")
 		case models.TRANSACTION_ORDER_STATUS_COMPLETED:
 			return errors.New("transaction order has been completed")
+		case models.TRANSACTION_ORDER_STATUS_FAILED:
+			return errors.New("transaction order has been closed")
 		default:
 			return errors.New("unknown failure")
 		}
@@ -96,7 +111,7 @@ func CancelBuyTransaction(byer *models.Buyer, transactionOrder *models.Transacti
 	if err3 != nil {
 		return err3
 	}
-	productSum := transactionOrder.Snapshot.EachPrice * uint64(transactionOrder.ProductCount)
+	productSum := transactionOrder.Snapshot.EachPrice * uint64(transactionOrder.ProductCount) + transactionOrder.Snapshot.TransportAmount
 	byer.Balance += productSum
 	prod.Inventory += transactionOrder.ProductCount
 	transactionOrder.OrderStatus = models.TRANSACTION_ORDER_STATUS_FAILED

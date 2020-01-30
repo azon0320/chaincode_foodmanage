@@ -67,9 +67,15 @@ func (ctx *FoodManageChaincode) Init(stub shim.ChaincodeStubInterface) peer.Resp
 }
 
 func (ctx *FoodManageChaincode) Invoke(stub shim.ChaincodeStubInterface) peer.Response {
+	time, err := stub.GetTxTimestamp()
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+	models.UpdateTxTimestamp(util.GetTxTimeMillis(time.GetSeconds(), time.GetNanos()))
 	fcn, args := stub.GetFunctionAndParameters()
 
 	// TODO DEBUGGER DELETE
+	fmt.Println(fmt.Sprintf("Begin Process (tx : %d)", models.GetTxTimestamp()))
 	fmt.Println(fmt.Sprintf("Fcn = %s", fcn))
 	for k, v := range args{
 		fmt.Println(fmt.Sprintf("Arg[%d] = %s", k, v))

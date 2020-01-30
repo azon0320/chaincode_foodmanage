@@ -2,7 +2,6 @@ package models
 
 import (
 	"strconv"
-	"time"
 )
 
 /*
@@ -22,11 +21,15 @@ type Credentials struct {
 }
 
 // 毫秒级对象ID
-func AllocateId() int64 {
-	return time.Now().UnixNano() / 1e6
+func AllocateId(nanos ...int64) int64 {
+	if len(nanos) > 0 {
+		return nanos[0] / 1e6
+	}else{
+		return txTimeMillis
+	}
 }
-func AllocateIdS() string { return strconv.Itoa(int(AllocateId())) }
+func AllocateIdS(nanos ...int64) string { return strconv.Itoa(int(AllocateId(nanos...))) }
 
-func CurrentTimeMillis() int64 {
-	return AllocateId()
+func CurrentTimeMillis(nanos ...int64) int64 {
+	return AllocateId(nanos...)
 }

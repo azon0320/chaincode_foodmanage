@@ -1,5 +1,7 @@
 package models
 
+import "time"
+
 const ModelVersion int = 1
 
 // -----  BEFORE AUTHENTICATE  -----
@@ -26,3 +28,18 @@ const OPERATE_UPDATE_TRANSPORT = "update_transport"
 const OPERATE_COMPLETE_TRANSPORT = "complete_transport"
 
 const DefaultInitialBalance = 1000
+
+/*
+ * Global vars
+ */
+var (
+	txTimeMillis = time.Now().UnixNano()
+)
+
+func UpdateTxTimestamp(millis int64){
+	txTimeMillis = millis
+}
+
+func GetTxTimestamp() int64{
+	return txTimeMillis
+}

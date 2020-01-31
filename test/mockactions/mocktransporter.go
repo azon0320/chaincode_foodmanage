@@ -1,6 +1,8 @@
 package mockactions
 
 import (
+	"encoding/json"
+	"fmt"
 	"github.com/dormao/chaincode_foodmanage/models"
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 	"github.com/hyperledger/fabric/protos/peer"
@@ -11,7 +13,8 @@ func RegTransporter(stub *shim.MockStub) peer.Response{
 		[]byte(models.UnAuthRegisterTransporter),
 		[]byte(TestPassword),
 	})
-	transporter_id = string(resp.GetPayload())
+	returns := &models.DataReturns{};json.Unmarshal(resp.Payload, returns)
+	transporter_id = fmt.Sprint(returns.Data)
 	return resp
 }
 
@@ -21,7 +24,8 @@ func TransporterLogin(stub *shim.MockStub) peer.Response{
 		[]byte(transporter_id),
 		[]byte(TestPassword),
 	})
-	transporter_token = string(resp.GetPayload())
+	returns := &models.DataReturns{};json.Unmarshal(resp.Payload, returns)
+	transporter_token = fmt.Sprint(returns.Data)
 	return resp
 }
 

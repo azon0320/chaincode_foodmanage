@@ -1,6 +1,7 @@
 package mockactions
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/dormao/chaincode_foodmanage/models"
 	"github.com/hyperledger/fabric/core/chaincode/shim"
@@ -12,7 +13,8 @@ func RegBuyer(stub *shim.MockStub) peer.Response{
 		[]byte(models.UnAuthRegisterBuyer),
 		[]byte(TestPassword),
 	})
-	buyer_id = string(resp.GetPayload())
+	returns := &models.DataReturns{};json.Unmarshal(resp.Payload, returns)
+	buyer_id = fmt.Sprint(returns.Data)
 	return resp
 }
 
@@ -22,7 +24,8 @@ func BuyerLogin(stub *shim.MockStub) peer.Response{
 		[]byte(buyer_id),
 		[]byte(TestPassword),
 	})
-	buyer_token = string(resp.GetPayload())
+	returns := &models.DataReturns{};json.Unmarshal(resp.Payload, returns)
+	buyer_token = fmt.Sprint(returns.Data)
 	return resp
 }
 
@@ -33,7 +36,8 @@ func BuyerBuy(stub *shim.MockStub) peer.Response{
 		[]byte(product_id),
 		[]byte(fmt.Sprint(MockBuyCount)),
 	})
-	transaction_id = string(resp.GetPayload())
+	returns := &models.DataReturns{};json.Unmarshal(resp.Payload, returns)
+	transaction_id = fmt.Sprint(returns.Data)
 	return resp
 }
 

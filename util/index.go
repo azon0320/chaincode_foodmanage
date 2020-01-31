@@ -35,3 +35,15 @@ func GetTxTimeMillisS(sec int64, nano int32) string{
 func GetTxTimeMillis(sec int64, nano int32) int64{
 	return GetTxTimeNanos(sec, nano) / 1e6
 }
+
+func JsonEncode(v interface{}) []byte{
+	dat, err := json.Marshal(v)
+	if err != nil {
+		return nil
+	}
+	return dat
+}
+
+func JsonEncodeS(v interface{}) string{
+	return string(JsonEncode(v))
+}

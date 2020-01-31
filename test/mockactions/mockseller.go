@@ -1,6 +1,8 @@
 package mockactions
 
 import (
+	"encoding/json"
+	"fmt"
 	"github.com/dormao/chaincode_foodmanage/models"
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 	"github.com/hyperledger/fabric/protos/peer"
@@ -11,7 +13,8 @@ func RegSeller(stub *shim.MockStub) peer.Response{
 		[]byte(models.UnAuthRegisterSeller),
 		[]byte(TestPassword),
 	})
-	seller_id = string(resp.GetPayload())
+	returns := &models.DataReturns{};json.Unmarshal(resp.Payload, returns)
+	seller_id = fmt.Sprint(returns.Data)
 	return resp
 }
 
@@ -21,7 +24,8 @@ func SellerLogin(stub *shim.MockStub) peer.Response{
 		[]byte(seller_id),
 		[]byte(TestPassword),
 	})
-	seller_token = string(resp.GetPayload())
+	returns := &models.DataReturns{};json.Unmarshal(resp.Payload, returns)
+	seller_token = fmt.Sprint(returns.Data)
 	return resp
 }
 
@@ -30,7 +34,9 @@ func SellerAddProd(stub *shim.MockStub) peer.Response{
 		[]byte(models.OPERATE_ADDPRODUCT),
 		[]byte(createCredentialsWithToken(seller_token)),
 	})
-	product_id = string(resp.GetPayload())
+	returns := &models.DataReturns{};json.Unmarshal(resp.Payload, returns)
+	println("Product Id : " + product_id)
+	product_id = fmt.Sprint(returns.Data)
 	return resp
 }
 
@@ -75,7 +81,8 @@ func SellerTransmitProd(stub *shim.MockStub) peer.Response{
 		[]byte(transaction_id),
 		[]byte(transporter_id),
 	})
-	transport_id = string(resp.GetPayload())
+	returns := &models.DataReturns{};json.Unmarshal(resp.Payload, returns)
+	transport_id = fmt.Sprint(returns.Data)
 	return resp
 }
 

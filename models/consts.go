@@ -9,6 +9,7 @@ const UnAuthRegisterSeller = "reg_seller"
 const UnAuthRegisterBuyer = "reg_buyer"
 const UnAuthRegisterTransporter = "reg_transporter"
 const UnAuthLogin = "login"
+const UnAuthPing = "ping"
 
 // -----  BEGIN SELLER  -----
 const OPERATE_ADDPRODUCT = "add_prod"

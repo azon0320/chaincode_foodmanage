@@ -8,6 +8,7 @@ const ModelVersion int = 1
 const UnAuthRegisterSeller = "reg_seller"
 const UnAuthRegisterBuyer = "reg_buyer"
 const UnAuthRegisterTransporter = "reg_transporter"
+const UnAuthLogin = "login"
 
 // -----  BEGIN SELLER  -----
 const OPERATE_ADDPRODUCT = "add_prod"
@@ -33,13 +34,13 @@ const DefaultInitialBalance = 1000
  * Global vars
  */
 var (
-	txTimeMillis = time.Now().UnixNano()
+	txTimeNanos = time.Now().UnixNano()
 )
 
-func UpdateTxTimestamp(millis int64){
-	txTimeMillis = millis
+func UpdateTxNanos(nanos int64){
+	txTimeNanos = nanos
 }
 
-func GetTxTimestamp() int64{
-	return txTimeMillis
+func GetTxTimeNanos() int64{
+	return txTimeNanos
 }

@@ -31,6 +31,15 @@ func TestLifeCycle(t *testing.T) {
 	resp = mockactions.RegTransporter(mkstub)
 	test.LogResponse(&resp, t)
 
+	resp = mockactions.SellerLogin(mkstub)
+	test.LogResponse(&resp, t)
+
+	resp = mockactions.BuyerLogin(mkstub)
+	test.LogResponse(&resp, t)
+
+	resp = mockactions.TransporterLogin(mkstub)
+	test.LogResponse(&resp, t)
+
 	resp = mockactions.SellerAddProd(mkstub)
 	test.LogResponse(&resp, t)
 

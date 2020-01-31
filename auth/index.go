@@ -10,6 +10,7 @@ import (
 
 const MaxAttemptFails = 8
 const AttemptCooldown = .5 * 60 * 1000
+const DefaultTokenExpire = 15 * 60 * 1000
 
 func AttemptWithPassword(credentials *models.Credentials, stub shim.ChaincodeStubInterface) (*models.Operator, error) {
 	operator := store.GetOperator(credentials.AccountId, stub)
@@ -35,6 +36,15 @@ func AttemptWithPassword(credentials *models.Credentials, stub shim.ChaincodeStu
 		}
 		operator.AttemptFails = 0
 		operator.LastLog = models.CurrentTimeMillis()
+		tokenMap := models.NewTokenMap(
+			models.GenerateTokenWithTime(models.GetTxTimeNanos()),
+			operator.Id)
+		err = store.SaveTokenMap(tokenMap, stub)
+		if err != nil {
+			return nil,err
+		}else{
+			operator.Token = tokenMap.Token
+		}
 	}
 	operator.LastAttempts = models.CurrentTimeMillis()
 	err = store.SaveOperator(operator, stub)
@@ -44,3 +54,28 @@ func AttemptWithPassword(credentials *models.Credentials, stub shim.ChaincodeStu
 		return nil, err
 	}
 }
+
+func AttemptWithToken(credentials *models.Credentials, stub shim.ChaincodeStubInterface) (*models.Operator, error){
+	token, err := store.GetTokenMapByToken(credentials.Token, stub)
+	if err != nil {
+		return nil,err
+	}
+	if math.Abs(float64(models.CurrentTimeMillis()) - float64(token.CreateTime)) > DefaultTokenExpire {
+		_ = store.DeleteTokenMap(token.Token, stub)
+		return nil, errors.New("token expired")
+	}
+	operator := store.GetOperator(token.AccountId, stub)
+	if operator == nil {
+		return nil, errors.New("account not found")
+	}
+	return operator, nil
+}
+
+func AttemptWithCredentials(credentials *models.Credentials, stub shim.ChaincodeStubInterface) (*models.Operator, error){
+	if credentials.Token != "" {
+		return AttemptWithToken(credentials, stub)
+	}else {
+		return AttemptWithPassword(credentials, stub)
+	}
+}
+

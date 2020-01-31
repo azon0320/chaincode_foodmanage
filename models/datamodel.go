@@ -18,18 +18,23 @@ type BalanceHolder struct {
 type Credentials struct {
 	AccountId string `json:"account_id"`
 	Password  string `json:"password"`
+	Token string `json:"token"`
 }
 
 // 毫秒级对象ID
 func AllocateId(nanos ...int64) int64 {
-	if len(nanos) > 0 {
-		return nanos[0] / 1e6
-	}else{
-		return txTimeMillis
-	}
+	return CurrentTxNanos(nanos...) / 1e6
 }
 func AllocateIdS(nanos ...int64) string { return strconv.Itoa(int(AllocateId(nanos...))) }
 
-func CurrentTimeMillis(nanos ...int64) int64 {
-	return AllocateId(nanos...)
+func CurrentTxNanos(nanos ...int64) int64 {
+	if len(nanos) > 0 {
+		return nanos[0]
+	}else{
+		return GetTxTimeNanos()
+	}
+}
+
+func CurrentTimeMillis(nanos ...int64) int64{
+	return CurrentTxNanos(nanos...) / 1e6
 }

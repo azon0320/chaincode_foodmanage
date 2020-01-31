@@ -40,6 +40,7 @@ Use E2E_CLI install the chaincode
 ### Command Tables
 | Feature | Function | Args | Returns |
 | - | - | - | - |
+| Account login | login | (AccountId) (Password) | Access Token |
 | Register seller | reg_seller | (Password) | Seller id |
 | Seller add product | add_prod | (JsonEncoded Credentials) | Product id |
 | Seller update product info | update_prod | (JsonEncoded Credentials) (JsonEncoded ProductInfo) | |

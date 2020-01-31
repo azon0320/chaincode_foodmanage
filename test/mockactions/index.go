@@ -9,8 +9,11 @@ const TestPassword = "testpwd"
 
 var(
 	seller_id = "none"
+	seller_token = ""
 	buyer_id = "none"
+	buyer_token = ""
 	transporter_id = "none"
+	transporter_token = ""
 
 	product_id = "none"
 	transaction_id = "none"
@@ -30,6 +33,13 @@ func createCredentials(id string) []byte{
 	dat, _ := json.Marshal(&models.Credentials{
 		AccountId: id,
 		Password: TestPassword,
+	})
+	return dat
+}
+
+func createCredentialsWithToken(token string) []byte{
+	dat, _ := json.Marshal(&models.Credentials{
+		Token: token,
 	})
 	return dat
 }

@@ -24,10 +24,14 @@ func Index_ArrayS(args []string, needle string) int {
 	return -1
 }
 
+func GetTxTimeNanos(sec int64, nano int32) int64{
+	return sec * 1e9 + int64(nano)
+}
+
 func GetTxTimeMillisS(sec int64, nano int32) string{
 	return fmt.Sprint(sec) + fmt.Sprint(nano / 1e6)
 }
 
 func GetTxTimeMillis(sec int64, nano int32) int64{
-	return sec * 1e3 + int64(nano / 1e6)
+	return GetTxTimeNanos(sec, nano) / 1e6
 }

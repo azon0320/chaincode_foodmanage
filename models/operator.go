@@ -20,7 +20,9 @@ type Authenticate struct {
 type Operator struct {
 	*Authenticate
 	*BalanceHolder
+	Description string `json:"description"`
 	OperatorType byte `json:"operator_type"`
+	Token string `json:"token"`
 }
 
 func (o *Operator) isSeller() bool {

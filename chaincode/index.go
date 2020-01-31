@@ -71,11 +71,12 @@ func (ctx *FoodManageChaincode) Invoke(stub shim.ChaincodeStubInterface) peer.Re
 	if err != nil {
 		return shim.Error(err.Error())
 	}
-	models.UpdateTxTimestamp(util.GetTxTimeMillis(time.GetSeconds(), time.GetNanos()))
+	models.UpdateTxNanos(util.GetTxTimeNanos(time.GetSeconds(), time.GetNanos()))
+
 	fcn, args := stub.GetFunctionAndParameters()
 
 	// TODO DEBUGGER DELETE
-	fmt.Println(fmt.Sprintf("Begin Process (tx : %d)", models.GetTxTimestamp()))
+	fmt.Println(fmt.Sprintf("Begin Process (txNano : %d)", models.GetTxTimeNanos()))
 	fmt.Println(fmt.Sprintf("Fcn = %s", fcn))
 	for k, v := range args{
 		fmt.Println(fmt.Sprintf("Arg[%d] = %s", k, v))
@@ -93,7 +94,7 @@ func (ctx *FoodManageChaincode) Invoke(stub shim.ChaincodeStubInterface) peer.Re
 	if err != nil {
 		return shim.Error(err.Error())
 	}
-	operator, err2 := auth.AttemptWithPassword(credentials, stub)
+	operator, err2 := auth.AttemptWithCredentials(credentials, stub)
 	if err2 != nil {
 		return shim.Error(err2.Error())
 	}
@@ -125,6 +126,17 @@ func (ctx *FoodManageChaincode) processUnAuthenticatedInvoke(fcn string, args []
 			return shim.Error(err.Error()), true
 		}
 		return shim.Success([]byte(id)), true
+	case models.UnAuthLogin:
+		Usage := fmt.Sprintf("Usage : %s <AccountId> <Password>", fcn)
+		if len(args) < 2 {
+			return shim.Error(Usage), true
+		}
+		operator, err := auth.AttemptWithPassword(
+			&models.Credentials{AccountId:args[0], Password:args[1], Token:""}, stub)
+		if err != nil {
+			return shim.Error(err.Error()), true
+		}
+		return shim.Success([]byte(operator.Token)), true
 	}
 	return shim.Error("unauth function invalid"), false
 }

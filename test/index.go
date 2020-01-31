@@ -1,6 +1,7 @@
 package test
 
 import (
+	"fmt"
 	"github.com/dormao/chaincode_foodmanage/chaincode"
 	"github.com/dormao/chaincode_foodmanage/models"
 	"github.com/hyperledger/fabric/core/chaincode/shim"
@@ -17,7 +18,7 @@ func launchMock(arg ...uint64) *shim.MockStub{
 	if len(arg) > 0 {
 		bal = arg[0]
 	}else {
-		bal = chaincode.DefaultInitialBalance
+		bal = models.DefaultInitialBalance
 	}
 	stub.MockInit(models.AllocateIdS(), [][]byte{
 		[]byte("unused function name"),
@@ -31,8 +32,10 @@ func LaunchMock(arg ...uint64) *shim.MockStub{
 
 func LogResponse(response *peer.Response, t *testing.T){
 	if response.Status == http.StatusOK {
+		fmt.Println("Response OK")
 		t.Log(response.String())
 	}else {
+		fmt.Println("Response FAIL : " + response.GetMessage())
 		t.Error(response.String())
 	}
 }

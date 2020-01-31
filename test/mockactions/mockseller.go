@@ -1,7 +1,6 @@
 package mockactions
 
 import (
-	"github.com/dormao/chaincode_foodmanage/chaincode"
 	"github.com/dormao/chaincode_foodmanage/models"
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 	"github.com/hyperledger/fabric/protos/peer"
@@ -9,17 +8,27 @@ import (
 
 func RegSeller(stub *shim.MockStub) peer.Response{
 	resp := stub.MockInvoke(models.AllocateIdS(), [][]byte{
-		[]byte(chaincode.UnAuthRegisterSeller),
+		[]byte(models.UnAuthRegisterSeller),
 		[]byte(TestPassword),
 	})
 	seller_id = string(resp.GetPayload())
 	return resp
 }
 
+func SellerLogin(stub *shim.MockStub) peer.Response{
+	resp := stub.MockInvoke(models.AllocateIdS(), [][]byte{
+		[]byte(models.UnAuthLogin),
+		[]byte(seller_id),
+		[]byte(TestPassword),
+	})
+	seller_token = string(resp.GetPayload())
+	return resp
+}
+
 func SellerAddProd(stub *shim.MockStub) peer.Response{
 	resp := stub.MockInvoke(models.AllocateIdS(), [][]byte{
-		[]byte(chaincode.OPERATE_ADDPRODUCT),
-		[]byte(createCredentials(seller_id)),
+		[]byte(models.OPERATE_ADDPRODUCT),
+		[]byte(createCredentialsWithToken(seller_token)),
 	})
 	product_id = string(resp.GetPayload())
 	return resp
@@ -27,8 +36,8 @@ func SellerAddProd(stub *shim.MockStub) peer.Response{
 
 func SellerUpdateProd(stub *shim.MockStub) peer.Response{
 	resp := stub.MockInvoke(models.AllocateIdS(), [][]byte{
-		[]byte(chaincode.OPERATE_UPDATE_PRODUCT),
-		[]byte(createCredentials(seller_id)),
+		[]byte(models.OPERATE_UPDATE_PRODUCT),
+		[]byte(createCredentialsWithToken(seller_token)),
 		[]byte(product_id),
 		[]byte(jsonEncode(&models.ProductUpdateRequest{
 			EachPrice: MockProdEachPrice,
@@ -43,8 +52,8 @@ func SellerUpdateProd(stub *shim.MockStub) peer.Response{
 
 func SellerSellOnProd(stub *shim.MockStub) peer.Response{
 	resp := stub.MockInvoke(models.AllocateIdS(), [][]byte{
-		[]byte(chaincode.OPERATE_TAKEONSELL),
-		[]byte(createCredentials(seller_id)),
+		[]byte(models.OPERATE_TAKEONSELL),
+		[]byte(createCredentialsWithToken(seller_token)),
 		[]byte(product_id),
 	})
 	return resp
@@ -52,8 +61,8 @@ func SellerSellOnProd(stub *shim.MockStub) peer.Response{
 
 func SellerSellOffProd(stub *shim.MockStub) peer.Response{
 	resp := stub.MockInvoke(models.AllocateIdS(), [][]byte{
-		[]byte(chaincode.OPERATE_TAKEOFFSELL),
-		[]byte(createCredentials(seller_id)),
+		[]byte(models.OPERATE_TAKEOFFSELL),
+		[]byte(createCredentialsWithToken(seller_token)),
 		[]byte(product_id),
 	})
 	return resp
@@ -61,8 +70,8 @@ func SellerSellOffProd(stub *shim.MockStub) peer.Response{
 
 func SellerTransmitProd(stub *shim.MockStub) peer.Response{
 	resp := stub.MockInvoke(models.AllocateIdS(), [][]byte{
-		[]byte(chaincode.OPERATE_TRANSMIT),
-		[]byte(createCredentials(seller_id)),
+		[]byte(models.OPERATE_TRANSMIT),
+		[]byte(createCredentialsWithToken(seller_token)),
 		[]byte(transaction_id),
 		[]byte(transporter_id),
 	})
@@ -72,8 +81,8 @@ func SellerTransmitProd(stub *shim.MockStub) peer.Response{
 
 func SellerCancelTransaction(stub *shim.MockStub) peer.Response{
 	resp := stub.MockInvoke(models.AllocateIdS(), [][]byte{
-		[]byte(chaincode.OPERATE_CANCELORDER),
-		[]byte(createCredentials(seller_id)),
+		[]byte(models.OPERATE_CANCELORDER),
+		[]byte(createCredentialsWithToken(seller_token)),
 		[]byte(transaction_id),
 	})
 	return resp

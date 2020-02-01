@@ -40,7 +40,7 @@ Use E2E_CLI install the chaincode
 ### Command Tables
 | Feature | Function | Args | Returns |
 | - | - | - | - |
-| Account login | login | (AccountId) (Password) | Access Token |
+| Account login | login | (AccountType) (AccountId) (Password) | Access Token |
 | Register seller | reg_seller | (Password) | Seller id |
 | Seller add product | add_prod | (JsonEncoded Credentials) | Product id |
 | Seller update product info | update_prod | (JsonEncoded Credentials) (JsonEncoded ProductInfo) | |
@@ -56,6 +56,12 @@ Use E2E_CLI install the chaincode
 | Transporter cancel transport order | cancel_transport | (JsonEncoded Credentials) (Transport id) ||
 | Transporter update transport data | update_transport | (JsonEncoded Credentials) (Transport id) (JsonEncoded data) ||
 | Transporter complete transport | complete_transport | (JsonEncoded Credentials) (Transport id) ||
+#### Account Types
+| Account Type | Value |
+| - | - |
+| Seller | 1 |
+| Buyer | 2 |
+| Transporter | 3 |
 ### Command Sample (CommandLine)
 * Register a seller account
 ~~~
@@ -83,7 +89,7 @@ Use E2E_CLI install the chaincode
 ~~~
 * You can convert the credentials or structured data to strings as arguments
 ```javascript
- // JavaScript Code
+ // JavaScript Code. Verify with password
  credentials = {
     account_id: "myseller_id",
     password: "myseller_password"
@@ -91,10 +97,9 @@ Use E2E_CLI install the chaincode
  JsonEncoded_Credentials = JSON.stringify(credentials)
 ```
 ```golang
- // Golang Code
- credentials := &Credentials{
-    AccountId: "myseller_id",
-    Password: "myseller_password"
+ // Golang Code. Verify with token
+ credentials := &TokenCredentials{
+    Token: "mytoken"
  }
  JsonEncoded_Credentials , err := json.Marshal(credentials)
 ```

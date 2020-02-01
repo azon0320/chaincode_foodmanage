@@ -14,38 +14,39 @@ func RegBuyer(stub *shim.MockStub) peer.Response{
 		[]byte(TestPassword),
 	})
 	returns := &models.DataReturns{};json.Unmarshal(resp.Payload, returns)
-	buyer_id = fmt.Sprint(returns.Data)
+	Mockbuyer_id = fmt.Sprint(returns.Data)
 	return resp
 }
 
 func BuyerLogin(stub *shim.MockStub) peer.Response{
 	resp := stub.MockInvoke(models.AllocateIdS(), [][]byte{
 		[]byte(models.UnAuthLogin),
-		[]byte(buyer_id),
+		[]byte(fmt.Sprint(models.OperatorBuyer)),
+		[]byte(Mockbuyer_id),
 		[]byte(TestPassword),
 	})
 	returns := &models.DataReturns{};json.Unmarshal(resp.Payload, returns)
-	buyer_token = fmt.Sprint(returns.Data)
+	Mockbuyer_token = fmt.Sprint(returns.Data)
 	return resp
 }
 
 func BuyerBuy(stub *shim.MockStub) peer.Response{
 	resp := stub.MockInvoke(models.AllocateIdS(), [][]byte{
 		[]byte(models.OPERATE_PURCHASE),
-		[]byte(createCredentialsWithToken(buyer_token)),
-		[]byte(product_id),
+		[]byte(createCredentialsWithToken(Mockbuyer_token)),
+		[]byte(Mockproduct_id),
 		[]byte(fmt.Sprint(MockBuyCount)),
 	})
 	returns := &models.DataReturns{};json.Unmarshal(resp.Payload, returns)
-	transaction_id = fmt.Sprint(returns.Data)
+	Mocktransaction_id = fmt.Sprint(returns.Data)
 	return resp
 }
 
 func BuyerConfirm(stub *shim.MockStub) peer.Response{
 	resp := stub.MockInvoke(models.AllocateIdS(), [][]byte{
 		[]byte(models.OPERATE_CONFIRM),
-		[]byte(createCredentialsWithToken(buyer_token)),
-		[]byte(transaction_id),
+		[]byte(createCredentialsWithToken(Mockbuyer_token)),
+		[]byte(Mocktransaction_id),
 	})
 	return resp
 }
@@ -53,8 +54,8 @@ func BuyerConfirm(stub *shim.MockStub) peer.Response{
 func BuyerCancelTransaction(stub *shim.MockStub) peer.Response{
 	resp := stub.MockInvoke(models.AllocateIdS(), [][]byte{
 		[]byte(models.OPERATE_CANCELORDER),
-		[]byte(createCredentialsWithToken(buyer_token)),
-		[]byte(transaction_id),
+		[]byte(createCredentialsWithToken(Mockbuyer_token)),
+		[]byte(Mocktransaction_id),
 	})
 	return resp
 }

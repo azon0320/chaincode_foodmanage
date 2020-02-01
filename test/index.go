@@ -31,11 +31,10 @@ func LaunchMock(arg ...uint64) *shim.MockStub{
 }
 
 func LogResponse(response *peer.Response, t *testing.T){
+	fmt.Println(response.String())
 	if response.Status == http.StatusOK {
-		fmt.Println("Response OK")
 		t.Log(response.String())
 	}else {
-		fmt.Println("Response FAIL : " + response.GetMessage())
 		t.Error(response.String())
 	}
 }

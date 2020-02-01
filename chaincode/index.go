@@ -77,6 +77,7 @@ func (ctx *FoodManageChaincode) Invoke(stub shim.ChaincodeStubInterface) peer.Re
 	fcn, args := stub.GetFunctionAndParameters()
 
 	// TODO DEBUGGER DELETE
+	fmt.Println()
 	fmt.Println(fmt.Sprintf("Begin Process (txNano : %d)", models.GetTxTimeNanos()))
 	fmt.Println(fmt.Sprintf("Fcn = %s", fcn))
 	for k, v := range args{
@@ -128,14 +129,21 @@ func (ctx *FoodManageChaincode) processUnAuthenticatedInvoke(fcn string, args []
 		}
 		return shim.Success(util.JsonEncode(models.WithSuccess(consts.MsgOK, id))), true
 	case models.UnAuthLogin:
-		Usage := fmt.Sprintf("Usage : %s <AccountId> <Password>", fcn)
-		if len(args) < 2 {
+		Usage := fmt.Sprintf("Usage : %s <OperatorType> <AccountId> <Password>", fcn)
+		if len(args) < 3 {
 			return shim.Success(util.JsonEncode(models.WithError(consts.CodeErrorParams, Usage))), true
 		}
+		args1Int, err := strconv.Atoi(args[0])
+		if err != nil {
+			return shim.Success(util.JsonEncode(models.WithError(consts.CodeErrorParams, Usage))), true
+		}
+		var inputType = args1Int
 		operator, err := auth.AttemptWithPassword(
-			&models.Credentials{AccountId:args[0], Password:args[1], Token:""}, stub)
+			&models.Credentials{AccountId:args[1], Password:args[2], Token:""}, stub)
 		if err != nil {
 			return shim.Success(util.JsonEncode(models.WithError(consts.CodeErrorAuthFail, err.Error()))), true
+		}else if operator.OperatorType != inputType {
+			return shim.Success(util.JsonEncode(models.WithError(consts.CodeErrorAuthFail, "invalid identity"))), true
 		}
 		return shim.Success(util.JsonEncode(models.WithSuccess(consts.MsgOK, operator.Token))), true
 	case models.UnAuthPing:

@@ -40,7 +40,7 @@
 ### 指令表
 | 功能 | 方法名 | 参数 | 返回值 |
 | - | - | - | - |
-| 账户登录 | login | (账户ID) (账户密码) | 账户令牌 |
+| 账户登录 | login | (账户类型) (账户ID) (账户密码) | 账户令牌 |
 | 注册货商 | reg_seller | (密码) | 货商ID |
 | 货商添加商品 | add_prod | (Json格式的身份信息) | 产品ID |
 | 货商更新商品信息 | update_prod | (Json格式的身份信息) (Json格式的产品信息) | |
@@ -56,6 +56,12 @@
 | 运输商取消订单 | cancel_transport | (Json格式的身份信息) (运输订单ID) ||
 | 运输商更新运输状态 | update_transport | (Json格式的身份信息) (运输订单ID) (Json格式的状态信息) ||
 | 运输商到达买家 | complete_transport | (Json格式的身份信息) (运输订单ID) ||
+#### 账户类型(数字)
+| 账户类型 | 数字值 |
+| - | - |
+| 货商 | 1 |
+| 买方 | 2 |
+| 物流 | 3 |
 ### 指令示例 (docker-cli)
 * 注册一个货商
 ~~~
@@ -83,7 +89,7 @@
 ~~~
 * 用JSON工具可以很容易地将结构体转换成JSON信息
 ```javascript
- // JavaScript 代码
+ // JavaScript 代码 用密码验证
  // JSON转换后 "{"account_id": "myseller_id" , "password": "myseller_password"}"
  credentials = {
     account_id: "myseller_id",
@@ -92,10 +98,9 @@
  JsonEncoded_Credentials = JSON.stringify(credentials)
 ```
 ```golang
- // Golang 代码
- credentials := &Credentials{
-    AccountId: "myseller_id",
-    Password: "myseller_password"
+ // Golang 代码 用令牌验证
+ credentials := &TokenCredentials{
+    Token: "mytoken"
  }
  JsonEncoded_Credentials , err := json.Marshal(credentials)
 ```

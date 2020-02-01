@@ -2,6 +2,7 @@ package auth
 
 import (
 	"errors"
+	"fmt"
 	"github.com/dormao/chaincode_foodmanage/models"
 	"github.com/dormao/chaincode_foodmanage/store"
 	"github.com/hyperledger/fabric/core/chaincode/shim"
@@ -36,6 +37,10 @@ func AttemptWithPassword(credentials *models.Credentials, stub shim.ChaincodeStu
 		}
 		operator.AttemptFails = 0
 		operator.LastLog = models.CurrentTimeMillis()
+		if operator.Token != "" {
+			fmt.Println("Operator Token found, delete")
+			err = store.DeleteTokenMap(operator.Token, stub)
+		}
 		tokenMap := models.NewTokenMap(
 			models.GenerateTokenWithTime(models.GetTxTimeNanos()),
 			operator.Id)
@@ -58,7 +63,7 @@ func AttemptWithPassword(credentials *models.Credentials, stub shim.ChaincodeStu
 func AttemptWithToken(credentials *models.Credentials, stub shim.ChaincodeStubInterface) (*models.Operator, error){
 	token, err := store.GetTokenMapByToken(credentials.Token, stub)
 	if err != nil {
-		return nil,err
+		return nil, errors.New("token expired")
 	}
 	if math.Abs(float64(models.CurrentTimeMillis()) - float64(token.CreateTime)) > DefaultTokenExpire {
 		_ = store.DeleteTokenMap(token.Token, stub)
@@ -66,7 +71,7 @@ func AttemptWithToken(credentials *models.Credentials, stub shim.ChaincodeStubIn
 	}
 	operator := store.GetOperator(token.AccountId, stub)
 	if operator == nil {
-		return nil, errors.New("account not found")
+		return nil, errors.New("token expired")
 	}
 	return operator, nil
 }

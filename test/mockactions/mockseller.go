@@ -14,37 +14,38 @@ func RegSeller(stub *shim.MockStub) peer.Response{
 		[]byte(TestPassword),
 	})
 	returns := &models.DataReturns{};json.Unmarshal(resp.Payload, returns)
-	seller_id = fmt.Sprint(returns.Data)
+	Mockseller_id = fmt.Sprint(returns.Data)
 	return resp
 }
 
 func SellerLogin(stub *shim.MockStub) peer.Response{
 	resp := stub.MockInvoke(models.AllocateIdS(), [][]byte{
 		[]byte(models.UnAuthLogin),
-		[]byte(seller_id),
+		[]byte(fmt.Sprint(models.OperatorSeller)),
+		[]byte(Mockseller_id),
 		[]byte(TestPassword),
 	})
 	returns := &models.DataReturns{};json.Unmarshal(resp.Payload, returns)
-	seller_token = fmt.Sprint(returns.Data)
+	Mockseller_token = fmt.Sprint(returns.Data)
 	return resp
 }
 
 func SellerAddProd(stub *shim.MockStub) peer.Response{
 	resp := stub.MockInvoke(models.AllocateIdS(), [][]byte{
 		[]byte(models.OPERATE_ADDPRODUCT),
-		[]byte(createCredentialsWithToken(seller_token)),
+		[]byte(createCredentialsWithToken(Mockseller_token)),
 	})
 	returns := &models.DataReturns{};json.Unmarshal(resp.Payload, returns)
-	println("Product Id : " + product_id)
-	product_id = fmt.Sprint(returns.Data)
+	//println("Product Id : " + Mockproduct_id)
+	Mockproduct_id = fmt.Sprint(returns.Data)
 	return resp
 }
 
 func SellerUpdateProd(stub *shim.MockStub) peer.Response{
 	resp := stub.MockInvoke(models.AllocateIdS(), [][]byte{
 		[]byte(models.OPERATE_UPDATE_PRODUCT),
-		[]byte(createCredentialsWithToken(seller_token)),
-		[]byte(product_id),
+		[]byte(createCredentialsWithToken(Mockseller_token)),
+		[]byte(Mockproduct_id),
 		[]byte(jsonEncode(&models.ProductUpdateRequest{
 			EachPrice: MockProdEachPrice,
 			Description: MockProdDescription,
@@ -59,8 +60,8 @@ func SellerUpdateProd(stub *shim.MockStub) peer.Response{
 func SellerSellOnProd(stub *shim.MockStub) peer.Response{
 	resp := stub.MockInvoke(models.AllocateIdS(), [][]byte{
 		[]byte(models.OPERATE_TAKEONSELL),
-		[]byte(createCredentialsWithToken(seller_token)),
-		[]byte(product_id),
+		[]byte(createCredentialsWithToken(Mockseller_token)),
+		[]byte(Mockproduct_id),
 	})
 	return resp
 }
@@ -68,8 +69,8 @@ func SellerSellOnProd(stub *shim.MockStub) peer.Response{
 func SellerSellOffProd(stub *shim.MockStub) peer.Response{
 	resp := stub.MockInvoke(models.AllocateIdS(), [][]byte{
 		[]byte(models.OPERATE_TAKEOFFSELL),
-		[]byte(createCredentialsWithToken(seller_token)),
-		[]byte(product_id),
+		[]byte(createCredentialsWithToken(Mockseller_token)),
+		[]byte(Mockproduct_id),
 	})
 	return resp
 }
@@ -77,20 +78,20 @@ func SellerSellOffProd(stub *shim.MockStub) peer.Response{
 func SellerTransmitProd(stub *shim.MockStub) peer.Response{
 	resp := stub.MockInvoke(models.AllocateIdS(), [][]byte{
 		[]byte(models.OPERATE_TRANSMIT),
-		[]byte(createCredentialsWithToken(seller_token)),
-		[]byte(transaction_id),
-		[]byte(transporter_id),
+		[]byte(createCredentialsWithToken(Mockseller_token)),
+		[]byte(Mocktransaction_id),
+		[]byte(Mocktransporter_id),
 	})
 	returns := &models.DataReturns{};json.Unmarshal(resp.Payload, returns)
-	transport_id = fmt.Sprint(returns.Data)
+	Mocktransport_id = fmt.Sprint(returns.Data)
 	return resp
 }
 
 func SellerCancelTransaction(stub *shim.MockStub) peer.Response{
 	resp := stub.MockInvoke(models.AllocateIdS(), [][]byte{
 		[]byte(models.OPERATE_CANCELORDER),
-		[]byte(createCredentialsWithToken(seller_token)),
-		[]byte(transaction_id),
+		[]byte(createCredentialsWithToken(Mockseller_token)),
+		[]byte(Mocktransaction_id),
 	})
 	return resp
 }

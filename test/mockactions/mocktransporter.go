@@ -14,26 +14,27 @@ func RegTransporter(stub *shim.MockStub) peer.Response{
 		[]byte(TestPassword),
 	})
 	returns := &models.DataReturns{};json.Unmarshal(resp.Payload, returns)
-	transporter_id = fmt.Sprint(returns.Data)
+	Mocktransporter_id = fmt.Sprint(returns.Data)
 	return resp
 }
 
 func TransporterLogin(stub *shim.MockStub) peer.Response{
 	resp := stub.MockInvoke(models.AllocateIdS(), [][]byte{
 		[]byte(models.UnAuthLogin),
-		[]byte(transporter_id),
+		[]byte(fmt.Sprint(models.OperatorTransporter)),
+		[]byte(Mocktransporter_id),
 		[]byte(TestPassword),
 	})
 	returns := &models.DataReturns{};json.Unmarshal(resp.Payload, returns)
-	transporter_token = fmt.Sprint(returns.Data)
+	Mocktransporter_token = fmt.Sprint(returns.Data)
 	return resp
 }
 
 func TransporterUpdateTemperature(stub *shim.MockStub) peer.Response{
 	resp := stub.MockInvoke(models.AllocateIdS(), [][]byte{
 		[]byte(models.OPERATE_UPDATE_TRANSPORT),
-		[]byte(createCredentialsWithToken(transporter_token)),
-		[]byte(transport_id),
+		[]byte(createCredentialsWithToken(Mocktransporter_token)),
+		[]byte(Mocktransport_id),
 		jsonEncode(&models.TransportDetails{
 			Temperature: MockTransportTemperature,
 		}),
@@ -44,8 +45,8 @@ func TransporterUpdateTemperature(stub *shim.MockStub) peer.Response{
 func TransporterCancelTransport(stub *shim.MockStub) peer.Response{
 	resp := stub.MockInvoke(models.AllocateIdS(), [][]byte{
 		[]byte(models.OPERATE_CANCELTRANSPORT),
-		[]byte(createCredentialsWithToken(transporter_token)),
-		[]byte(transport_id),
+		[]byte(createCredentialsWithToken(Mocktransporter_token)),
+		[]byte(Mocktransport_id),
 	})
 	return resp
 }
@@ -53,8 +54,8 @@ func TransporterCancelTransport(stub *shim.MockStub) peer.Response{
 func TransporterCompleteTransport(stub *shim.MockStub) peer.Response{
 	resp := stub.MockInvoke(models.AllocateIdS(), [][]byte{
 		[]byte(models.OPERATE_COMPLETE_TRANSPORT),
-		[]byte(createCredentialsWithToken(transporter_token)),
-		[]byte(transport_id),
+		[]byte(createCredentialsWithToken(Mocktransporter_token)),
+		[]byte(Mocktransport_id),
 	})
 	return resp
 }

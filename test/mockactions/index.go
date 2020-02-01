@@ -8,16 +8,16 @@ import (
 const TestPassword = "testpwd"
 
 var(
-	seller_id = "none"
-	seller_token = ""
-	buyer_id = "none"
-	buyer_token = ""
-	transporter_id = "none"
-	transporter_token = ""
+	Mockseller_id = "none"
+	Mockseller_token = ""
+	Mockbuyer_id = "none"
+	Mockbuyer_token = ""
+	Mocktransporter_id = "none"
+	Mocktransporter_token = ""
 
-	product_id = "none"
-	transaction_id = "none"
-	transport_id = "none"
+	Mockproduct_id = "none"
+	Mocktransaction_id = "none"
+	Mocktransport_id = "none"
 
 	MockBuyCount uint32 = 86
 

@@ -1,8 +1,8 @@
 package models
 
-const OperatorSeller byte = 1
-const OperatorBuyer byte = 2
-const OperatorTransporter byte = 3
+const OperatorSeller int = 1
+const OperatorBuyer int = 2
+const OperatorTransporter int = 3
 
 const PrefixSeller = "sel"
 const PrefixBuyer = "buy"
@@ -21,7 +21,7 @@ type Operator struct {
 	*Authenticate
 	*BalanceHolder
 	Description string `json:"description"`
-	OperatorType byte `json:"operator_type"`
+	OperatorType int `json:"operator_type"`
 	Token string `json:"token"`
 }
 
@@ -49,7 +49,7 @@ type Transporter struct {
 	*Operator
 }
 
-func NewOperator(accountType byte, password string, initialBalance uint64) *Operator {
+func NewOperator(accountType int, password string, initialBalance uint64) *Operator {
 	id := AllocateIdS()
 	var prefixId string = ""
 	switch accountType {
